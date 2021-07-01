@@ -1,0 +1,12 @@
+spring:
+  main:
+    web-application-type: "none"
+    banner-mode: "off"
+  application:
+    name: Conductor CSV Exporter
+
+conductor:
+  workflow-name: ${CONDUCTOR_WORKFLOW_NAME}
+  workflow-version: ${CONDUCTOR_WORKFLOW_VERSION:1}
+  client:
+    api-url: ${CONDUCTOR_URL}

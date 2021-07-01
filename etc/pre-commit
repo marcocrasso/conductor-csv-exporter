@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# format
+./gradlew ktlintFormat
+# check, when format cannot fix anything, next will fail
+./gradlew ktlintCheck
+
+# store the last exit code in a variable
+RESULT=$?
+
+# re-add to stage formatted files
+git update-index --again
+
+# return the './gradlew ktlintCheck' exit code
+exit $RESULT
