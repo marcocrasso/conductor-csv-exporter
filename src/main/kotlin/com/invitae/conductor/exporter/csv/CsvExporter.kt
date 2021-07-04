@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component
 @Component
 class CsvExporter : ExportService {
 
-    @Value("\${append}")
+    @Value("\${append:false}")
     var append: Boolean = false
 
     @Value("\${tasksFile:tasks.csv}")
