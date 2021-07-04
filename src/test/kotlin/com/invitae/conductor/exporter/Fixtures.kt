@@ -1,4 +1,4 @@
-package com.invitae.conductor.reports
+package com.invitae.conductor.exporter
 
 import com.netflix.conductor.common.run.SearchResult
 import com.netflix.conductor.common.run.Workflow

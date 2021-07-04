@@ -1,4 +1,4 @@
-package com.invitae.conductor.reports
+package com.invitae.conductor.exporter
 
 import com.netflix.conductor.client.http.WorkflowClient
 import com.netflix.conductor.common.run.Workflow

@@ -1,4 +1,4 @@
-package com.invitae.conductor.reports
+package com.invitae.conductor.exporter
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -9,7 +9,8 @@ import org.springframework.boot.runApplication
 import java.net.URL
 
 /**
- * Conductor CSV Exporter tool expects one mandatory argument, startTime [epoch]. Optionally, it accepts:
+ * Conductor Exporter it expects one mandatory argument, startTime [epoch].
+ * To use it with the default CSV exporter, optionally, it accepts:
  * endTime=[epoch] default is now.
  * append=[true|false] , which can be used to append|override existing files. Default is false.
  * workflowsFile="string", which can be used to set target files. Default workflows.csv.
@@ -21,7 +22,7 @@ import java.net.URL
  * @author marco.crasso@invitae.com
  */
 @SpringBootApplication
-class ConductorCsvExporterApplication : ApplicationRunner {
+class ConductorExporterApplication : ApplicationRunner {
 
     @Value("\${conductor.workflow-name}")
     lateinit var workflowName: String
@@ -38,38 +39,12 @@ class ConductorCsvExporterApplication : ApplicationRunner {
     @Value("\${endTime:#{T(System).currentTimeMillis()}}")
     var endTime: Long = 0
 
-    @Value("\${append}")
-    var append: Boolean = false
-
-    @Value("\${tasksFile:tasks.csv}")
-    lateinit var tasksFile: String
-
-    @Value("\${workflowsFile:workflows.csv}")
-    lateinit var workflowsFile: String
+    @Autowired
+    lateinit var exporter: ExportService
 
     override fun run(args: ApplicationArguments?) {
-        val s = System.currentTimeMillis()
-        println("Starting to export CSV files for '$workflowName'/'$workflowVersion' at '${URL(conductor.conductorApiUrl).host}' range: $startTime - $endTime")
-        export()
-        println("Files '$tasksFile' and '$workflowsFile' were successfully generated in ${System.currentTimeMillis() - s} [ms]")
-    }
-
-    fun export(
-        append: Boolean = this.append,
-        tasksFile: String = this.tasksFile,
-        workflowsFile: String = this.workflowsFile,
-        workflowName: String = this.workflowName,
-        workflowVersion: Int = this.workflowVersion,
-        startTime: Long = this.startTime,
-        endTime: Long = this.endTime
-    ) {
-        if (!append)
-            csvHeaders(tasksFile, workflowsFile)
-        toCsv(
-            tasksFile,
-            workflowsFile,
-            *obtainWorkflowsDetails()
-        )
+        println("Starting to export Conductor Details for '$workflowName'/'$workflowVersion' at '${URL(conductor.conductorApiUrl).host}' range: $startTime - $endTime")
+        exporter.export(*obtainWorkflowsDetails())
     }
 
     fun obtainWorkflowsDetails(
@@ -81,5 +56,5 @@ class ConductorCsvExporterApplication : ApplicationRunner {
 }
 
 fun main(args: Array<String>) {
-    runApplication<ConductorCsvExporterApplication>(*args)
+    runApplication<ConductorExporterApplication>(*args)
 }

@@ -1,4 +1,4 @@
-package com.invitae.conductor.reports
+package com.invitae.conductor.exporter.csv
 
 import com.github.doyaaaaaken.kotlincsv.dsl.csvWriter
 import com.netflix.conductor.common.run.Workflow
